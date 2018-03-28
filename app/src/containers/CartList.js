@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 import {
   View,
+  ScrollView,
+  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,14 +19,16 @@ export default class CartList extends Component {
       <View style={styles.container}>
         <Header
           headerLeft={
-            <Icon
-              name='arrow-left'
-              size={30}
-              color='white'
-            />
+            <TouchableOpacity>
+              <Icon
+                name='arrow-left'
+                size={30}
+                color='white'
+              />
+            </TouchableOpacity>
           }
         />
-        <View style={{ flex: 1 }}>
+        <ScrollView>
           <ProductCart
             onPress={() => {}}
             image='https://cdn.pixabay.com/photo/2018/01/08/02/34/technology-3068617_960_720.jpg'
@@ -55,7 +59,7 @@ export default class CartList extends Component {
             onPressAmountMinus={() => {}}
             onPressRemove={() => {}}
           />
-        </View>
+        </ScrollView>
 
         <Purchase value={178.90} />
       </View>

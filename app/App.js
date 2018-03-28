@@ -9,5 +9,5 @@ import ProductDetails from './src/containers/ProductDetails';
 import CartList from './src/containers/CartList'
 
 export default () => (
-  <CartList />
+  <Home />
 );

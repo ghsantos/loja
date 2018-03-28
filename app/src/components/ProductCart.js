@@ -8,12 +8,16 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import Amount from './Amount';
 
 export default class ProductCart extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => this.props.onPress()}
+      >
         <Image source={{ uri: this.props.image }} style={styles.image} />
 
         <View style={styles.content}>
@@ -24,40 +28,20 @@ export default class ProductCart extends Component {
 
           <View style={styles.line}>
             <TouchableOpacity
-              onPress={() => this.props.onPressRemove}
+              onPress={() => this.props.onPressRemove()}
               style={styles.removeButton}
             >
               <Text style={styles.removeText}>remover</Text>
             </TouchableOpacity>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity
-                onPress={() => this.props.onPressAmountMinus}
-                style={styles.amountModify}
-              >
-                <Icon
-                  name='minus'
-                  size={12}
-                  color='#555'
-                />
-              </TouchableOpacity>
-
-              <Text>{this.props.amount}</Text>
-
-              <TouchableOpacity
-                onPress={() => this.props.onPressAmountPlus}
-                style={styles.amountModify}
-              >
-                <Icon
-                  name='plus'
-                  size={12}
-                  color='#555'
-                />
-              </TouchableOpacity>
-            </View>
+            <Amount
+              amount={this.props.amount}
+              onPressPlus={() => this.props.onPressAmountPlus()}
+              onPressMinus={() => this.props.onPressAmountMinus()}
+            />
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -98,10 +82,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 11,
   },
-  amountModify: {
-    margin: 3,
-    padding: 3,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-  }
 });
