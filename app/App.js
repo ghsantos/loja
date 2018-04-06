@@ -3,11 +3,20 @@
  */
 
 import React from 'react';
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore, compose } from 'redux';
+import thunk from 'redux-thunk';
 
-import Home from './src/containers/Home';
-import ProductDetails from './src/containers/ProductDetails';
-import CartList from './src/containers/CartList'
+import AppReducer from './src/reducers';
+import AppWithNavigationState from './src/navigators/AppNavigator';
+
+const store = createStore(
+  AppReducer,
+  compose(applyMiddleware(thunk)),
+);
 
 export default () => (
-  <Home />
+  <Provider store={store}>
+    <AppWithNavigationState />
+  </Provider>
 );

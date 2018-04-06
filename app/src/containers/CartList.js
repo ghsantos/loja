@@ -7,19 +7,21 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Header from '../components/Header';
 import Purchase from '../components/Purchase';
 import ProductCart from '../components/ProductCart';
+import { getIndex } from '../utils';
 
-export default class CartList extends Component {
+class CartList extends Component {
   render() {
     return (
       <View style={styles.container}>
         <Header
           headerLeft={
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
               <Icon
                 name='arrow-left'
                 size={30}
@@ -29,43 +31,47 @@ export default class CartList extends Component {
           }
         />
         <ScrollView>
-          <ProductCart
-            onPress={() => {}}
-            image='https://cdn.pixabay.com/photo/2018/01/08/02/34/technology-3068617_960_720.jpg'
-            title='IPhone X'
-            price='5400'
-            amount={1}
-            onPressAmountPlus={() => {}}
-            onPressAmountMinus={() => {}}
-            onPressRemove={() => {}}
-          />
-          <ProductCart
-            onPress={() => {}}
-            image='https://cdn.pixabay.com/photo/2018/03/07/00/59/technology-3205024_960_720.jpg'
-            title='IPhone X'
-            price='5400'
-            amount={1}
-            onPressAmountPlus={() => {}}
-            onPressAmountMinus={() => {}}
-            onPressRemove={() => {}}
-          />
-          <ProductCart
-            onPress={() => {}}
-            image='https://cdn.pixabay.com/photo/2015/09/25/06/08/headphones-956720_960_720.jpg'
-            title='IPhone X'
-            price='5400'
-            amount={2}
-            onPressAmountPlus={() => {}}
-            onPressAmountMinus={() => {}}
-            onPressRemove={() => {}}
-          />
+          {
+            this.props.cartList.map(cartProduct => {
+              const product = this.props.products[
+                getIndex(this.props.products, cartProduct.productId)
+              ];
+
+              return (
+                <ProductCart
+                  onPress={() => this.props.productDetailsScreen(product)}
+                  image={product.image}
+                  title={product.title}
+                  price={product.price}
+                  amount={cartProduct.amount}
+                  onPressAmountPlus={() => {}}
+                  onPressAmountMinus={() => {}}
+                  onPressRemove={() => this.props.removeToCart(product.id)}
+                  key={product.id}
+                />
+              );
+            })
+          }
         </ScrollView>
 
-        <Purchase value={178.90} />
+        <Purchase value={this.props.priceSum} />
       </View>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  products: state.appReducer.products,
+  cartList: state.appReducer.cartList,
+  priceSum: state.appReducer.priceSum,
+});
+
+const mapDispatchToProps = dispatch => ({
+  productDetailsScreen: (product) => dispatch({ type: 'NAV_PRODUCT_DETAILS', product }),
+  removeToCart: (productId) => dispatch({ type: 'REMOVE_TO_CART', productId }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CartList);
 
 const styles = StyleSheet.create({
   container: {

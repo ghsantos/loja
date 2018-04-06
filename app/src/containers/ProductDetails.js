@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Header from '../components/Header';
@@ -16,13 +17,33 @@ import Cart from '../components/Cart';
 import Amount from '../components/Amount';
 import metrics from '../styles/metrics';
 
-export default class ProductDetails extends Component {
+class ProductDetails extends Component {
+  state = {
+    amount: 1,
+  }
+
+  onPressAmountPlus() {
+    const { amount } = this.state;
+
+    this.setState({ amount: amount + 1 });
+  }
+
+  onPressAmountMinus() {
+    const { amount } = this.state;
+
+    if (amount > 1) {
+      this.setState({ amount: amount - 1 });
+    }
+  }
+
   render() {
+    const product = this.props.product;
+
     return (
       <View style={styles.container}>
         <Header
           headerLeft={
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
               <Icon
                 name='arrow-left'
                 size={30}
@@ -31,38 +52,47 @@ export default class ProductDetails extends Component {
             </TouchableOpacity>
           }
           headerRight={
-            <Cart value={2} onPress={() => {}} />
+            <Cart
+              value={this.props.totalProducts}
+              onPress={this.props.cartListScreen}
+            />
           }
         />
 
         <ScrollView>
           <Image
-            source={{ uri: 'https://cdn.pixabay.com/photo/2018/01/08/02/34/technology-3068617_960_720.jpg' }}
+            source={{ uri: product.image }}
             style={styles.image}
           />
 
           <View style={styles.content}>
             <View>
-              <Text style={styles.title}>IPhone X</Text>
-              <Text style={styles.price}>R$ 5400.00</Text>
+              <Text style={styles.title}>{product.title}</Text>
+              <Text style={styles.price}>R$ {product.price}</Text>
             </View>
 
             <View style={{ flexDirection: 'row', marginTop: 5, alignItems: 'center' }}>
               <Text style={{ marginRight: 5 }}>Quantidade</Text>
 
               <Amount
-                amount={4}
-                onPressPlus={() => {}}
-                onPressMinus={() => {}}
+                amount={this.state.amount}
+                onPressPlus={() => this.onPressAmountPlus()}
+                onPressMinus={() => this.onPressAmountMinus()}
               />
             </View>
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={[styles.button, { backgroundColor: '#4888EF' }]}>
+              <TouchableOpacity
+                onPress={() => this.props.addToCart(product, this.state.amount)}
+                style={[styles.button, { backgroundColor: '#4888EF' }]}
+              >
                 <Text>Adicionar ao carrinho</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.button, { backgroundColor: '#8AE234' }]}>
+              <TouchableOpacity
+                onPress={() => this.props.purchase(product, this.state.amount)}
+                style={[styles.button, { backgroundColor: '#8AE234' }]}
+              >
                 <Text>Comprar</Text>
               </TouchableOpacity>
             </View>
@@ -71,14 +101,7 @@ export default class ProductDetails extends Component {
               <Text style={{ fontSize: 16 }}>
                 Descrição do produto:
               </Text>
-              <Text>
-                Quam dictum cras nulla integer primis potenti faucibus blandit nunc,
-                tortor tristique pharetra mattis eros netus hendrerit vivamus tempor conubia.
-                Quam dictum cras nulla integer primis potenti faucibus blandit nunc,
-                tortor tristique pharetra mattis eros netus hendrerit vivamus tempor conubia.
-                Quam dictum cras nulla integer primis potenti faucibus blandit nunc,
-                tortor tristique pharetra mattis eros netus hendrerit vivamus tempor conubia.
-              </Text>
+              <Text>{product.description}</Text>
             </View>
           </View>
         </ScrollView>
@@ -86,6 +109,25 @@ export default class ProductDetails extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  product: state.appReducer.productToDetails,
+  totalProducts: state.appReducer.totalProducts,
+});
+
+const mapDispatchToProps = dispatch => ({
+  cartListScreen: () => dispatch({ type: 'NAV_CART_LIST' }),
+  purchase: (product, amount) => dispatch({
+    type: 'PURCHASE',
+    cartProduct: { productId: product.id, amount },
+  }),
+  addToCart: (product, amount) => dispatch({
+    type: 'ADD_TO_CART',
+    cartProduct: { productId: product.id, amount },
+  }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);
 
 const styles = StyleSheet.create({
   container: {
