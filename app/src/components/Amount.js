@@ -19,12 +19,12 @@ export default class Amount extends Component {
         >
           <Icon
             name='minus'
-            size={12}
+            size={16}
             color='#555'
           />
         </TouchableOpacity>
 
-        <Text>{this.props.amount}</Text>
+        <Text style={{ fontSize: 16 }}>{this.props.amount}</Text>
 
         <TouchableOpacity
           onPress={() => this.props.onPressPlus()}
@@ -32,7 +32,7 @@ export default class Amount extends Component {
         >
           <Icon
             name='plus'
-            size={12}
+            size={16}
             color='#555'
           />
         </TouchableOpacity>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   amountModify: {
-    margin: 3,
+    margin: 4,
     padding: 3,
     backgroundColor: '#fff',
     borderRadius: 20,

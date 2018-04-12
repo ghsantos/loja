@@ -17,7 +17,7 @@ export default class Purchase extends Component {
           <Text style={styles.value}> R$ {this.props.value}</Text>
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => this.props.onPress()}>
           <Text style={styles.buttonText}>COMPRAR</Text>
         </TouchableOpacity>
       </View>

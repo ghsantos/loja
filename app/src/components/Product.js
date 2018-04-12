@@ -18,8 +18,12 @@ export default class Product extends Component {
         <Image source={{ uri: this.props.image }} style={styles.image} />
 
         <View style={styles.details}>
-          <Text style={styles.title}>{this.props.title}</Text>
-          <Text style={styles.price}>R$ {this.props.price}</Text>
+          <Text style={styles.title} numberOfLines={1}>
+            {this.props.title}
+          </Text>
+          <Text style={styles.price}>
+            R$ {this.props.price}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -49,7 +53,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   title: {
-
+    width: '60%'
   },
   price: {
     fontSize: 12

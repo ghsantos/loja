@@ -20,7 +20,7 @@ class Home extends Component {
       <View style={styles.container}>
         <Header
           title={
-            <Text style={{ color: '#fff', fontSize: 19, fontWeight: 'bold' }}>Loja</Text>
+            <Text style={styles.headerTitle}>Loja</Text>
           }
           headerLeft={
             <Icon
@@ -73,9 +73,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 19,
+    fontWeight: 'bold'
+  },
   productList: {
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingBottom: 5,
   }
 });

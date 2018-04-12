@@ -37,7 +37,7 @@ class ProductDetails extends Component {
   }
 
   render() {
-    const product = this.props.product;
+    const product = this.props.navigation.state.params.productToDetails;
 
     return (
       <View style={styles.container}>
@@ -111,7 +111,6 @@ class ProductDetails extends Component {
 }
 
 const mapStateToProps = state => ({
-  product: state.appReducer.productToDetails,
   totalProducts: state.appReducer.totalProducts,
 });
 

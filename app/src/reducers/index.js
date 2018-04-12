@@ -19,13 +19,19 @@ function appReducer(state = initialAppReducerState, action) {
   let cartList;
 
   switch (action.type) {
-    case 'NAV_PRODUCT_DETAILS':
-      nextState = { ...state, productToDetails: action.product };
-      break;
-
     case 'PURCHASE':
     case 'ADD_TO_CART':
-      nextState = { ...state, cartList: [...state.cartList, action.cartProduct] };
+      cartList = [...state.cartList];
+
+      index = cartList.findIndex(
+        (cartProduct) => (cartProduct.productId === action.cartProduct.productId)
+      );
+
+      if (index !== -1) {
+        cartList.splice(index, 1);
+      }
+
+      nextState = { ...state, cartList: [...cartList, action.cartProduct] };
       break;
 
     case 'REMOVE_TO_CART':
@@ -35,6 +41,31 @@ function appReducer(state = initialAppReducerState, action) {
       cartList.splice(index, 1);
 
       nextState = { ...state, cartList: [...cartList] };
+      break;
+
+    case 'AMOUNT_PLUS':
+      cartList = [...state.cartList];
+
+      index = cartList.findIndex((cartProduct) => (cartProduct.productId === action.productId));
+      cartList[index].amount++;
+
+      nextState = { ...state, cartList: [...cartList] };
+      break;
+
+    case 'AMOUNT_MINUS':
+      cartList = [...state.cartList];
+
+      index = cartList.findIndex((cartProduct) => (cartProduct.productId === action.productId));
+
+      if (cartList[index].amount > 1) {
+        cartList[index].amount--;
+      }
+
+      nextState = { ...state, cartList: [...cartList] };
+      break;
+
+    case 'PURCHASE_ALL':
+      nextState = { ...state, cartList: [] };
       break;
 
     default:
@@ -64,7 +95,7 @@ function appReducer(state = initialAppReducerState, action) {
     };
   }
 
-  console.log(nextState);
+  //console.log(nextState);
 
   return nextState;
 }
@@ -86,7 +117,10 @@ function nav(state = initialNavState, action) {
 
     case 'NAV_PRODUCT_DETAILS':
       nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'ProductDetails' }),
+        NavigationActions.navigate({
+          routeName: 'ProductDetails',
+          params: { productToDetails: action.product }
+        }),
         state,
       );
       break;
